@@ -38,6 +38,7 @@
 #'
 #' @export
 get_r_reddit <- function(subreddit = "all", n = 100, after = NULL,
+                         before = NULL) {
   n <- ceiling(n / 100)
   x <- vector("list", n)
   for (i in seq_along(x)) {
@@ -45,8 +46,11 @@ get_r_reddit <- function(subreddit = "all", n = 100, after = NULL,
     if (!identical(subreddit, "all")) {
       url <- paste0(url, "&subreddit=", subreddit)
     }
+    if (!is.null(before)) {
+      url <- paste0(url, "&before=", as.numeric(before))
+    }
     if (!is.null(after)) {
-      url <- paste0(url, "&before=", as.numeric(after))
+      url <- paste0(url, "&after=", as.numeric(after))
     }
     r <- httr::GET(url)
     j <- httr::content(r, as = "text", encoding = "UTF-8")
