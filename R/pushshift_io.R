@@ -56,6 +56,7 @@ get_r_reddit <- function(subreddit = "all", n = 100, after = NULL,
     j <- httr::content(r, as = "text", encoding = "UTF-8")
     j <- jsonlite::fromJSON(j)
     x[[i]] <- as_tbl(non_recs(j$data))
+    if (!"created_utc" %in% names(x[[i]])) x[[i]] <- NULL
     if (!"created_utc" %in% names(x[[i]])) break
     x[[i]] <- formate_createds(x[[i]])
     after <- x[[i]]$created_utc[nrow(x[[i]])]
