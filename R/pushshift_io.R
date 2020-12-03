@@ -47,10 +47,10 @@ get_r_reddit <- function(subreddit = "all", n = 100, after = NULL,
       url <- paste0(url, "&subreddit=", subreddit)
     }
     if (!is.null(before)) {
-      url <- paste0(url, "&before=", as.numeric(before))
+      url <- paste0(url, "&before=", as.numeric(as.POSIXct(before)))
     }
     if (!is.null(after)) {
-      url <- paste0(url, "&after=", as.numeric(after))
+      url <- paste0(url, "&after=", as.numeric(as.POSIXct(after)))
     }
     r <- httr::GET(url)
     j <- httr::content(r, as = "text", encoding = "UTF-8")
