@@ -37,6 +37,7 @@
 #' }
 #'
 #' @export
+#' @import jtools
 get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
                          before = NULL) {
   n <- ceiling(n / 100)
@@ -65,8 +66,12 @@ get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
       "#", i, ": collected ", nrow(x[[i]]), " posts"
     )
   }
-  tryCatch(docall_rbind(x),
+  out <- tryCatch(docall_rbind(x),
     error = function(e) x)
+  key_names <- c("id", "subreddit", "created_utc", "author", "title", "score",
+                 "selftext", "full_link", "num_comments")
+  names_order <- c(key_names, names(out) %not% key_names)
+  out <- out[names_order]
 }
 
 
@@ -139,7 +144,11 @@ get_reddit_comments <- function(subreddit = "all", author = NULL, n = 100,
       "#", i, ": collected ", nrow(x[[i]]), " posts"
     )
   }
-  tryCatch(docall_rbind(x),
-           error = function(e) x)
+  out <- tryCatch(docall_rbind(x),
+                  error = function(e) x)
+  key_names <- c("id", "parent_id", "created_utc", "author", "title", "score",
+                 "body")
+  names_order <- c(key_names, names(out) %not% key_names)
+  out <- out[names_order]
 }
 
