@@ -33,3 +33,9 @@ docall_rbind <- function(...) {
 as_tbl <- function(...) {
   tibble::as_tibble(...)
 }
+
+print_complete <- function (...) {
+  x <- paste(c(...), collapse = "")
+  x <- paste0("✔", " ", x)
+  cat(x, fill = TRUE)
+}

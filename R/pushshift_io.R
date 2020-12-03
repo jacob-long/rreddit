@@ -68,7 +68,7 @@ get_reddit_posts <- function(subreddit = "all", query = NULL, n = 100,
     x[[i]] <- formate_createds(x[[i]])
     before <- min(x[[i]]$created_utc)
     if (length(before) == 0) break
-    tfse::print_complete(
+    print_complete(
       "#", i, ": collected ", nrow(x[[i]]), " posts"
     )
   }
@@ -160,7 +160,7 @@ get_reddit_comments <- function(subreddit = "all", query = NULL, author = NULL,
     x[[i]] <- formate_createds(x[[i]])
     before <- min(x[[i]]$created_utc)
     if (length(before) == 0) break
-    tfse::print_complete(
+    print_complete(
       "#", i, ": collected ", nrow(x[[i]]), " posts"
     )
   }
