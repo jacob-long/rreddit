@@ -111,25 +111,26 @@ get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
 #' }
 #'
 #' @export
-  n <- ceiling(n / 1000)
 get_reddit_comments <- function(subreddit = "all", author = NULL, n = 100,
                                before = NULL, after = NULL) {
+  n <- ceiling(n / 100)
   x <- vector("list", n)
   for (i in seq_along(x)) {
     url <- "https://api.pushshift.io/reddit/search/comment/?size=1000"
     if (!identical(subreddit, "all")) {
       url <- paste0(url, "&subreddit=", subreddit)
     }
-    if (!is.null(author)) {
-      url <- paste0(url, "&author=", author)
+    if (!is.null(before)) {
+      url <- paste0(url, "&before=", as.numeric(as.POSIXct(before)))
     }
     if (!is.null(after)) {
-      url <- paste0(url, "&before=", as.numeric(after))
+      url <- paste0(url, "&after=", as.numeric(as.POSIXct(after)))
     }
     r <- httr::GET(url)
     j <- httr::content(r, as = "text", encoding = "UTF-8")
     j <- jsonlite::fromJSON(j)
-    x[[i]] <- tbltools::as_tbl(non_recs(j$data))
+    x[[i]] <- as_tbl(non_recs(j$data))
+    if (!"created_utc" %in% names(x[[i]])) x[[i]] <- NULL
     if (!"created_utc" %in% names(x[[i]])) break
     x[[i]] <- formate_createds(x[[i]])
     after <- x[[i]]$created_utc[nrow(x[[i]])]
