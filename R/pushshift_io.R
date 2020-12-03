@@ -3,7 +3,7 @@
 #' Reads/parses reddit data from api.pushshift.io
 #'
 #' @param subreddit Name of subreddit from which to get data. Defaults to "all".
-#' @param n Number of submission/posts to return. Defaults to 1000.
+#' @param n Number of submission/posts to return. Defaults to 100.
 #' @param after Optional, the date-time from which to start the next search.
 #' @param before Optional, the date-time from which to start the next search.
 #' @return A data frame of reddit data.
@@ -37,8 +37,8 @@
 #' }
 #'
 #' @export
-get_r_reddit <- function(subreddit = "all", n = 1000, after = NULL) {
-  n <- ceiling(n / 1000)
+get_r_reddit <- function(subreddit = "all", n = 100, after = NULL,
+  n <- ceiling(n / 100)
   x <- vector("list", n)
   for (i in seq_along(x)) {
     url <- "https://api.pushshift.io/reddit/search/submission/?size=1000"
