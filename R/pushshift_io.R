@@ -68,7 +68,7 @@ get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
   }
   out <- tryCatch(docall_rbind(x),
     error = function(e) x)
-  key_names <- c("id", "subreddit", "created_utc", "author", "title", "score",
+  key_names <- c("id", "subreddit", "created_utc", "author", "score",
                  "selftext", "full_link", "num_comments")
   names_order <- c(key_names, names(out) %not% key_names)
   out <- out[names_order]
