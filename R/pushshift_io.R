@@ -44,7 +44,7 @@ get_reddit_posts <- function(subreddit = "all", query = NULL, n = 100,
   n <- ceiling(n / 100)
   x <- vector("list", n)
   for (i in seq_along(x)) {
-    url <- "https://api.pushshift.io/reddit/search/submission/?size=1000"
+    url <- "https://api.pushshift.io/reddit/search/submission/?size=100&sort=desc"
     if (!identical(subreddit, "all")) {
       url <- paste0(url, "&subreddit=", subreddit)
     }
@@ -58,18 +58,23 @@ get_reddit_posts <- function(subreddit = "all", query = NULL, n = 100,
       url <- paste0(url, "&q=", xml2::url_escape(query))
     }
     r <- httr::GET(url)
+    if (httr::http_type(r) != "application/json") {
+      stop("API did not return json\n", r, call. = FALSE)
+    }
     j <- httr::content(r, as = "text", encoding = "UTF-8")
     j <- jsonlite::fromJSON(j)
     x[[i]] <- as_tbl(non_recs(j$data))
-    if (!"created_utc" %in% names(x[[i]])) x[[i]] <- NULL
     if (!"created_utc" %in% names(x[[i]])) break
     x[[i]] <- formate_createds(x[[i]])
-    after <- x[[i]]$created_utc[nrow(x[[i]])]
-    if (length(after) == 0) break
+    before <- min(x[[i]]$created_utc)
+    if (length(before) == 0) break
     tfse::print_complete(
       "#", i, ": collected ", nrow(x[[i]]), " posts"
     )
   }
+  x <- lapply(x, function(x) {
+    if (!"created_utc" %in% names(x)) NULL else x
+    })
   out <- tryCatch(docall_rbind(x),
     error = function(e) x)
   key_names <- c("id", "subreddit", "created_utc", "author", "title", "score",
@@ -90,6 +95,7 @@ get_reddit_posts <- function(subreddit = "all", query = NULL, n = 100,
 #' @param n Number of submission/posts to return. Defaults to 1000.
 #' @param after Optional, the date-time from which to start the next search.
 #' @param before Optional, the date-time from which to start the next search.
+#' @inheritParams get_reddit_posts
 #' @return A data frame of reddit data.
 #' @details Column descriptions are provided below
 #'
@@ -127,7 +133,7 @@ get_reddit_comments <- function(subreddit = "all", query = NULL, author = NULL,
   n <- ceiling(n / 100)
   x <- vector("list", n)
   for (i in seq_along(x)) {
-    url <- "https://api.pushshift.io/reddit/search/comment/?size=1000"
+    url <- "https://api.pushshift.io/reddit/search/comment/?size=100&sort=desc"
     if (!identical(subreddit, "all")) {
       url <- paste0(url, "&subreddit=", subreddit)
     }
@@ -137,25 +143,31 @@ get_reddit_comments <- function(subreddit = "all", query = NULL, author = NULL,
     if (!is.null(after)) {
       url <- paste0(url, "&after=", as.numeric(as.POSIXct(after)))
     }
+    if (!is.null(author)) {
+      url <- paste0(url, "&author=", author)
+    }
     if (!is.null(query)) {
       url <- paste0(url, "&q=", xml2::url_escape(query))
     }
     r <- httr::GET(url)
+    if (httr::http_type(r) != "application/json") {
+      stop("API did not return json", call. = FALSE)
+    }
     j <- httr::content(r, as = "text", encoding = "UTF-8")
     j <- jsonlite::fromJSON(j)
     x[[i]] <- as_tbl(non_recs(j$data))
-    if (!"created_utc" %in% names(x[[i]])) x[[i]] <- NULL
     if (!"created_utc" %in% names(x[[i]])) break
     x[[i]] <- formate_createds(x[[i]])
-    after <- x[[i]]$created_utc[nrow(x[[i]])]
-    if (length(after) == 0) break
+    before <- min(x[[i]]$created_utc)
+    if (length(before) == 0) break
     tfse::print_complete(
       "#", i, ": collected ", nrow(x[[i]]), " posts"
     )
   }
   out <- tryCatch(docall_rbind(x),
                   error = function(e) x)
-  key_names <- c("id", "parent_id", "created_utc", "author", "score", "body")
+  key_names <- c("id", "parent_id", "subreddit", "created_utc", "author",
+                 "score", "body")
   names_order <- c(key_names, names(out) %not% key_names)
   out <- out[names_order]
   out

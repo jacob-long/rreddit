@@ -4,10 +4,18 @@
 \alias{get_reddit_posts}
 \title{Get data from pushshift.io}
 \usage{
-get_reddit_posts(subreddit = "all", n = 100, after = NULL, before = NULL)
+get_reddit_posts(
+  subreddit = "all",
+  query = NULL,
+  n = 100,
+  after = NULL,
+  before = NULL
+)
 }
 \arguments{
 \item{subreddit}{Name of subreddit from which to get data. Defaults to "all".}
+
+\item{query}{A search query. By default, there is no search query.}
 
 \item{n}{Number of submission/posts to return. Defaults to 100.}
 

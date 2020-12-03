@@ -6,6 +6,7 @@
 \usage{
 get_reddit_comments(
   subreddit = "all",
+  query = NULL,
   author = NULL,
   n = 100,
   before = NULL,
@@ -14,6 +15,8 @@ get_reddit_comments(
 }
 \arguments{
 \item{subreddit}{Name of subreddit from which to get data. Defaults to "all".}
+
+\item{query}{A search query. By default, there is no search query.}
 
 \item{author}{Restrict results to author.}
 
