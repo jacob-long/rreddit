@@ -1,13 +1,18 @@
 Package: rreddit
 Title: Collecting reddit data
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
-    person(given = "Michael W.",
-           family = "Kearney",
-           role = c("aut", "cre"),
-           email = "kearneymw@missouri.edu",
-           comment = c(ORCID = "0000-0002-0730-4694"))
-Description: Collects Reddit data from either reddit.com or pushshit.io and
+    c(person(given = "Jacob A.", 
+        family = "Long",
+        role = c("aut"),
+        email = "jacob.long@sc.edu",
+        comment = c(ORCID = "0000-0002-1582-6214")),
+        person(given = "Michael W.",
+        family = "Kearney",
+        role = c("aut", "cre"),
+        email = "kearneymw@missouri.edu",
+        comment = c(ORCID = "0000-0002-0730-4694")))
+Description: Collects Reddit data from pushshift.io and
     wrangles it into a data frame.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -16,7 +21,9 @@ LazyData: true
 Imports: 
     tfse,
     httr,
-    jsonlite
-RoxygenNote: 6.1.1
-URL: https://github.com/mkearney/rreddit
-BugReports: https://github.com/mkearney/rreddit/issues
+    jsonlite,
+    jtools,
+    ggplot2
+RoxygenNote: 7.1.1
+URL: https://github.com/jacob-long/rreddit
+BugReports: https://github.com/jacob-long/rreddit/issues
