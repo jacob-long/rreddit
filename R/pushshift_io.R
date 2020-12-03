@@ -72,6 +72,8 @@ get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
                  "selftext", "full_link", "num_comments")
   names_order <- c(key_names, names(out) %not% key_names)
   out <- out[names_order]
+  out$selftext[!out$is_self] <- NA
+  out
 }
 
 
@@ -150,5 +152,6 @@ get_reddit_comments <- function(subreddit = "all", author = NULL, n = 100,
                  "body")
   names_order <- c(key_names, names(out) %not% key_names)
   out <- out[names_order]
+  out
 }
 
