@@ -4,6 +4,7 @@
 #'
 #' @param subreddit Name of subreddit from which to get data. Defaults to "all".
 #' @param n Number of submission/posts to return. Defaults to 100.
+#' @param query A search query. By default, there is no search query.
 #' @param after Optional, the date-time from which to start the next search.
 #' @param before Optional, the date-time from which to start the next search.
 #' @return A data frame of reddit data.
@@ -38,8 +39,8 @@
 #'
 #' @export
 #' @import jtools
-get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
-                         before = NULL) {
+get_reddit_posts <- function(subreddit = "all", query = NULL, n = 100,
+                             after = NULL, before = NULL) {
   n <- ceiling(n / 100)
   x <- vector("list", n)
   for (i in seq_along(x)) {
@@ -52,6 +53,9 @@ get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
     }
     if (!is.null(after)) {
       url <- paste0(url, "&after=", as.numeric(as.POSIXct(after)))
+    }
+    if (!is.null(query)) {
+      url <- paste0(url, "&q=", xml2::url_escape(query))
     }
     r <- httr::GET(url)
     j <- httr::content(r, as = "text", encoding = "UTF-8")
@@ -118,8 +122,8 @@ get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
 #' }
 #'
 #' @export
-get_reddit_comments <- function(subreddit = "all", author = NULL, n = 100,
-                               before = NULL, after = NULL) {
+get_reddit_comments <- function(subreddit = "all", query = NULL, author = NULL,
+                                n = 100, before = NULL, after = NULL) {
   n <- ceiling(n / 100)
   x <- vector("list", n)
   for (i in seq_along(x)) {
@@ -132,6 +136,9 @@ get_reddit_comments <- function(subreddit = "all", author = NULL, n = 100,
     }
     if (!is.null(after)) {
       url <- paste0(url, "&after=", as.numeric(as.POSIXct(after)))
+    }
+    if (!is.null(query)) {
+      url <- paste0(url, "&q=", xml2::url_escape(query))
     }
     r <- httr::GET(url)
     j <- httr::content(r, as = "text", encoding = "UTF-8")
