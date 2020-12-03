@@ -37,7 +37,7 @@
 #' }
 #'
 #' @export
-get_r_reddit <- function(subreddit = "all", n = 100, after = NULL,
+get_reddit_posts <- function(subreddit = "all", n = 100, after = NULL,
                          before = NULL) {
   n <- ceiling(n / 100)
   x <- vector("list", n)
@@ -111,8 +111,9 @@ get_r_reddit <- function(subreddit = "all", n = 100, after = NULL,
 #' }
 #'
 #' @export
-get_comment_reddit <- function(subreddit = "all", author = NULL, n = 1000, after = NULL) {
   n <- ceiling(n / 1000)
+get_reddit_comments <- function(subreddit = "all", author = NULL, n = 100,
+                               before = NULL, after = NULL) {
   x <- vector("list", n)
   for (i in seq_along(x)) {
     url <- "https://api.pushshift.io/reddit/search/comment/?size=1000"
