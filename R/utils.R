@@ -36,6 +36,6 @@ as_tbl <- function(...) {
 
 print_complete <- function (...) {
   x <- paste(c(...), collapse = "")
-  x <- paste0("✔", " ", x)
+  x <- paste0(iconv("\xe2\x9c\x94"), " ", x)
   cat(x, fill = TRUE)
 }
