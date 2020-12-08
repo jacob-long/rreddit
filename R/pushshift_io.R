@@ -57,10 +57,8 @@ get_reddit_posts <- function(subreddit = "all", query = NULL, n = 100,
     if (!is.null(query)) {
       url <- paste0(url, "&q=", xml2::url_escape(query))
     }
-    r <- httr::GET(url)
-    if (httr::http_type(r) != "application/json") {
-      stop("API did not return json\n", r, call. = FALSE)
-    }
+    r <- httr::RETRY("GET", url, encode = "json", times = 5, pause_base = 10,
+                     quiet = FALSE)
     j <- httr::content(r, as = "text", encoding = "UTF-8")
     j <- jsonlite::fromJSON(j)
     x[[i]] <- as_tbl(non_recs(j$data))
@@ -149,10 +147,8 @@ get_reddit_comments <- function(subreddit = "all", query = NULL, author = NULL,
     if (!is.null(query)) {
       url <- paste0(url, "&q=", xml2::url_escape(query))
     }
-    r <- httr::GET(url)
-    if (httr::http_type(r) != "application/json") {
-      stop("API did not return json", call. = FALSE)
-    }
+    r <- httr::RETRY("GET", url, encode = "json", times = 5, pause_base = 10,
+                     quiet = FALSE)
     j <- httr::content(r, as = "text", encoding = "UTF-8")
     j <- jsonlite::fromJSON(j)
     x[[i]] <- as_tbl(non_recs(j$data))
